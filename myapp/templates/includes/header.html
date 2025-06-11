@@ -1,0 +1,89 @@
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container-fluid">
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold" href="/">Insurance</a>
+
+    <!-- Toggle Button for Mobile -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar"
+      aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar Content -->
+    <div class="collapse navbar-collapse" id="mainNavbar">
+      <!-- LEFT SIDE MENUS -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if not allowed_sections or "All menu" in allowed_sections %}
+        <li class="nav-item">
+          <a class="nav-link" href="/dashboard">Home</a>
+        </li>
+        {% endif %}
+
+        {% if not allowed_sections or "Import CSV file" in allowed_sections %}
+        <li class="nav-item">
+          <a class="nav-link" href="/upload">Upload CSV</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">Profile</a>
+        </li>
+
+        {% if not allowed_sections or "Policy-wise report" in allowed_sections or "Company-wise report" in allowed_sections or "Branch-wise report" in allowed_sections or "New Client report" in allowed_sections or "Product-wise report" in allowed_sections or "Policy History Report-Client wise report" in allowed_sections or "Agent wise Commission report" in allowed_sections %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="reportDropdown" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            Report
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="reportDropdown">
+            {% if not allowed_sections or "Policy-wise report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/policy_report">Policy-wise Report</a></li>
+            {% endif %}
+            {% if not allowed_sections or "Company-wise report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/company_report">Company-wise Report</a></li>
+            {% endif %}
+            {% if not allowed_sections or "Branch-wise report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/branch_wise">Branch-wise Report</a></li>
+            {% endif %}
+            {% if not allowed_sections or "New Client report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/new_client_report">New Client Report</a></li>
+            {% endif %}
+            {% if not allowed_sections or "Product-wise report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/product_lob_wise">Product-wise Report</a></li>
+            {% endif %}
+            {% if not allowed_sections or "Policy History Report-Client wise report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/policy_history_report">Policy History Report-Client wise</a></li>
+            {% endif %}
+            {% if not allowed_sections or "Agent wise Commission report" in allowed_sections %}
+            <li><a class="dropdown-item" href="/agent_wise_commission_report">Agent wise Commission Report</a></li>
+            {% endif %}
+          </ul>
+        </li>
+        {% endif %}
+      </ul>
+
+      <!-- RIGHT SIDE PROFILE DROPDOWN -->
+      <ul class="navbar-nav ms-auto">
+        <div class="position-absolute top-50 start-50 translate-middle text-white d-none d-lg-block">
+           <small class="text-light">Logged in as: <strong>{{ cuser }}</strong></small>
+        </div>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="{% if data.image %}{{ data.image.url }}{% else %}https://i.pravatar.cc/100{% endif %}"
+              alt="profile" class="rounded-circle me-2" width="32" height="32">
+            <strong>{{ user_type }}</strong>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li><a class="dropdown-item" href="/profile">View Profile</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

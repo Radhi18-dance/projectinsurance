@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Confirm Delete CSV File</title>
+    <style>
+        /* Simple CSS Reset */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .confirm-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .confirm-box h2 {
+            margin-bottom: 20px;
+            color: #d9534f;
+            /* Bootstrap danger red */
+        }
+
+        .confirm-box p {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        button,
+        a.btn-link {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            color: white;
+            user-select: none;
+        }
+
+        button.delete-btn {
+            background-color: #d9534f;
+        }
+
+        button.delete-btn:hover {
+            background-color: #c9302c;
+        }
+
+        a.btn-link {
+            background-color: #6c757d;
+            color: white;
+            display: inline-block;
+            line-height: normal;
+            text-align: center;
+        }
+
+        a.btn-link:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="confirm-box">
+        <h2>Delete CSV File?</h2>
+        <p>Are you sure you want to delete the file <strong>"{{ csv_file_name }}"</strong>?</p>
+        <div class="buttons">
+            <!-- The delete form submits here -->
+            <form method="POST" action="{% url 'delete_uploaded_csv' csv_id %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">Yes, Delete</button>
+            </form>
+
+            <!-- Cancel link -->
+            <a href="{% url 'uploaded_csv_list' %}" class="btn-link">Cancel</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

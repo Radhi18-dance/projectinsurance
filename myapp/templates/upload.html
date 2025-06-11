@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insurance CSV Upload & Download</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: 'Segoe UI', sans-serif;
+			background-color: #f8f9fa;
+		}
+
+		body {
+			padding-top: 70px;
+			background-color: #f8f9fa;
+		}
+
+		.navbar-dark {
+			background-color: #343a40 !important;
+		}
+
+		.dropdown-menu-end {
+			right: 0;
+			left: auto;
+		}
+
+		table {
+			border-collapse: collapse;
+			width: 100%;
+			font-family: Arial, sans-serif;
+		}
+
+		th,
+		td {
+			border: 1px solid #000;
+			padding: 6px 10px;
+			text-align: left;
+			vertical-align: top;
+		}
+
+		th {
+			background-color: #f2f2f2;
+		}
+
+		.navbar {
+			background-color: #000;
+			padding: 10px 20px;
+		}
+
+		.navbar .logo a {
+			font-size: 1.5rem;
+			font-weight: bold;
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.nav-links {
+			list-style: none;
+			display: flex;
+			gap: 20px;
+			margin: 0;
+		}
+
+		.nav-links li a {
+			color: #fff;
+			text-decoration: none;
+		}
+
+		.nav-links li a.active,
+		.nav-links li a:hover {
+			border-bottom: 2px solid #fff;
+			font-weight: bold;
+		}
+
+		.profile-container {
+			position: relative;
+		}
+
+		.profile-img {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			border: 2px solid #fff;
+			cursor: pointer;
+		}
+
+		.card {
+			animation: fadeIn 0.8s ease-in-out;
+		}
+
+		@keyframes fadeIn {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+	</style>
+</head>
+
+<body>
+	{% include "includes/header.html" %}
+	<li class="nav-item text-white me-3">
+		<small class="text-light">Logged in as: <strong>{{ cuser }}</strong></small>
+
+	</li>
+	<div class="container py-5">
+		<h2 class="mb-4 text-center">Insurance CSV Upload</h2>
+		{% if messages %}
+		{% for message in messages %}
+		{% if 'csv' in message.tags %}
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{% else %}
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			{{ message }}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+		{% endif %}
+		{% endfor %}
+		{% endif %}
+
+		<!-- Upload CSV Form -->
+		<div class="card shadow-sm">
+			<div class="card-body">
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<div class="mb-3">
+						<label for="file" class="form-label">Select CSV File</label>
+						<input type="file" class="form-control" name="csv_file" accept=".csv" required>
+					</div>
+					<button type="submit" class="btn btn-primary">Upload CSV</button>
+				</form>
+			</div>
+		</div>
+		<!-- Uploaded Files Listing -->
+		<div class="mt-5">
+			<h4>Uploaded Files</h4>
+			<table class="table table-bordered table-hover">
+				<thead class="table-light">
+					<tr>
+						<th>Filename</th>
+						<th>Uploaded Date</th>
+						<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for csv in csv_list %}
+					<tr>
+						<td>{{ csv.file.name|cut:"csv_uploads/" }}</td>
+						<td>{{ csv.uploaded_at|date:"d-m-Y H:i" }}</td>
+						<td>
+							<a href="{% url 'view_uploaded_csv' csv.id %}"
+								class="btn btn-sm btn-outline-secondary">View</a>
+							<form method="post" action="{% url 'delete_uploaded_csv' csv.id %}" style="display:inline;">
+								{% csrf_token %}
+								<button type="submit" class="btn btn-sm btn-danger"
+									onclick="return confirm('Are you sure you want to delete this CSV and related data?');">
+									Delete
+								</button>
+							</form>
+						</td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td colspan="3" class="text-center text-muted">No CSV files uploaded yet.</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!-- JavaScript for Profile Dropdown -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script>
+		const profileToggle = document.getElementById("profileToggle");
+		const dropdownMenu = document.getElementById("dropdownMenu");
+
+		profileToggle.addEventListener("click", () => {
+			dropdownMenu.style.display = dropdownMenu.style.display === "block" ? "none" : "block";
+		});
+
+		document.addEventListener("click", (e) => {
+			if (!profileToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+				dropdownMenu.style.display = "none";
+			}
+		});
+	</script>
+</body>
+
+</html>
